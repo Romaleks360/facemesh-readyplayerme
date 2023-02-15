@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+  <link rel="stylesheet" href="./style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/kalidokit/dist/kalidokit.umd.js"></script>
+
+  <script src="https://preview.babylonjs.com/babylon.js"></script>
+  <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <video class="input_video"></video>
+    <div class="canvas-container">
+      <canvas class="output_canvas" width="1280px" height="720px"></canvas>
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="message">Loading</div>
+      </div>
+    </div>
+  </div>
+
+  <canvas class="renderCanvas"></canvas>
+
+  <script src="./kalman.min.js"></script>
+  <script type="module" src="./script.js"></script>
+  <script src="./babylon.js"></script>
+  <script>
+    var canvas = document.getElementsByClassName("renderCanvas")[0];
+
+    var startRenderLoop = function (engine, canvas)
+    {
+      engine.runRenderLoop(function ()
+      {
+        if (sceneToRender && sceneToRender.activeCamera)
+        {
+          sceneToRender.render();
+        }
+      });
+    }
+
+    var engine = null;
+    var scene = null;
+    var sceneToRender = null;
+    var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+    var delayCreateScene = createScene;
+    window.initFunction = async function () 
+    {
+      var asyncEngineCreation = async function ()
+      {
+        try
+        {
+          return createDefaultEngine();
+        } catch (e)
+        {
+          console.log("the available createEngine function failed. Creating the default engine instead");
+          return createDefaultEngine();
+        }
+      }
+
+      window.engine = await asyncEngineCreation();
+      if (!engine) throw 'engine should not be null.';
+      startRenderLoop(engine, canvas);
+      window.scene = delayCreateScene();
+    };
+
+    initFunction().then(() => { scene.then(returnedScene => { sceneToRender = returnedScene; }); });
+
+    window.addEventListener("resize", function ()
+    {
+      engine.resize();
+    });
+  </script>
+
+
+</body>
+
+</html>
