@@ -29,16 +29,6 @@ spinner.ontransitionend = () =>
     spinner.style.display = 'none';
 };
 
-function adaptLayout ()
-{
-    if (window.innerWidth / window.innerHeight < 1)
-        document.body.style.flexDirection = "column";
-    else
-        document.body.style.flexDirection = "row";
-}
-window.addEventListener("resize", adaptLayout);
-adaptLayout();
-
 function onResults (results)
 {
     // Hide the spinner.

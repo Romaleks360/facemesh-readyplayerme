@@ -16,21 +16,22 @@
 </head>
 
 <body>
+  <canvas class="renderCanvas"></canvas>
+
   <div class="container">
     <video class="input_video"></video>
     <div class="canvas-container">
       <canvas class="output_canvas" width="1280px" height="720px"></canvas>
-      <div class="loading">
-        <div class="spinner"></div>
-        <div class="message">Loading</div>
-      </div>
+    </div>
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="message">Loading</div>
     </div>
   </div>
 
-  <canvas class="renderCanvas"></canvas>
 
   <script src="./kalman.min.js"></script>
-  <script type="module" src="./script.js"></script>
+  <script src="./script.js"></script>
   <script src="./babylon.js"></script>
   <script>
     var canvas = document.getElementsByClassName("renderCanvas")[0];
