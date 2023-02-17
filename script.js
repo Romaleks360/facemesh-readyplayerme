@@ -29,6 +29,16 @@ spinner.ontransitionend = () =>
     spinner.style.display = 'none';
 };
 
+function adaptLayout ()
+{
+    if (window.innerWidth / window.innerHeight < 1)
+        document.body.style.flexDirection = "column";
+    else
+        document.body.style.flexDirection = "row";
+}
+window.addEventListener("resize", adaptLayout);
+adaptLayout();
+
 function onResults (results)
 {
     // Hide the spinner.
@@ -75,6 +85,8 @@ videoElement.classList.toggle('selfie', solutionOptions.selfieMode);
 const camera = new Camera(videoElement, {
     onFrame: async () =>
     {
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
         await faceMesh.send({ image: videoElement });
     },
     width: 1280,
